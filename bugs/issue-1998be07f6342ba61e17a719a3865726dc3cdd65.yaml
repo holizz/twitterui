@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: update box character count
+desc: Update box, should provide a way to measure how much text you have left upto 140.
+type: :feature
+component: twitterui
+release: "0.1"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-05-19 21:10:31.165473 Z
+references: []
+
+id: 1998be07f6342ba61e17a719a3865726dc3cdd65
+log_events: 
+- - 2008-05-19 21:10:32.163631 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""

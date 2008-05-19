@@ -1,0 +1,16 @@
+--- !ditz.rubyforge.org,2008-03-06/project 
+name: twitterui
+version: "0.2"
+components: 
+- !ditz.rubyforge.org,2008-03-06/component 
+  name: twitterui
+releases: 
+- !ditz.rubyforge.org,2008-03-06/release 
+  name: "0.1"
+  status: :unreleased
+  release_time: 
+  log_events: 
+  - - 2008-05-19 21:02:37.062147 Z
+    - Arnaud Berthomier <oz@cyprio.net>
+    - created
+    - ""

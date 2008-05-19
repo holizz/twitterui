@@ -1,0 +1,41 @@
+TwitterUI
+---------
+
+TwitterUI is a small Shoes app, and yet another Twitter client for
+the desktop.  Since Shoes is still being developped, twitterui is more
+an experiment than a stable alternative to the other three thousand
+Twitter-apps around there.
+
+It is designed so far to be:
+    * usable, and feature-complete,
+    * pretty (for some definitions of pretty),
+    * and simple.
+
+I hope you enjoy it.
+
+Install
+-------
+
+You need Shoes to get this application working.
+
+The Shoes toolkit can be downloaded from
+http://code.whytheluckystiff.net/shoes, and you should get a late
+(unpolished) build to run the application: so, have a look at 
+http://code.whytheluckystiff.net/shoes/wiki/RecentBuilds
+
+Once you get Shoes to run on your system, simply launch:
+
+    shoes twitterui.rb
+
+
+I only ran TwitterUI on Linux systems (Debian, and and a XUbuntu-ed
+eeePC), so I'd be pleased to know if you get it to run nicely on other
+platforms. :)
+
+
+Copyrights
+----------
+
+Yeah, well.  TwitterUI is made by Arnaud Berthomier <oz@cyprio.net> and
+is distributed under the BSD licence.  The Twitter logo (twitter.png
+file) and name are (c) Twitter Inc.

@@ -129,12 +129,6 @@ class TwitterUI < Shoes
 
   protected
 
-  # update status on Twitter
-  def update_status
-    @@twitter.post @up_text.text
-    @up_text.text = ''
-  end
-
   # format twitter status message into eval-able code
   def format_status(status, bg)
     user = status.user.screen_name
@@ -227,15 +221,9 @@ class TwitterUI < Shoes
 
   # Load twitter's friend timeline and display it
   def load_tweets(msg = "Refresing...")
+    @loading = status_msg(msg)
     tweets = []
 
-    if @@tweets_flow.nil?
-      @loading = para msg, :stroke => white, :font => "Verdana", :size => 8
-    else
-      @@tweets_flow.before do
-        @loading = para msg, :stroke => white, :font => "Verdana", :size => 8
-      end
-    end
     Thread.new do
       tweets = @@twitter.tweets
       @loading.replace ""
@@ -243,12 +231,35 @@ class TwitterUI < Shoes
     end
   end
 
+  # Displays a text status para on top of the app
+  def status_msg(msg)
+    if @@tweets_flow.nil?
+      @loading = para msg, :stroke => white, :font => "Verdana", :size => 8
+    else
+      @@tweets_flow.before do
+        @loading = para msg, :stroke => white, :font => "Verdana", :size => 8
+      end
+    end
+    @loading
+  end
+
+  # Update status on Twitter
+  def update_status
+    @sending = status_msg('Sending...')
+
+    Thread.new do
+      @@twitter.post @up_text.text
+      @sending.replace ''
+    end
+    @up_text.text = ''
+  end
+
   # Relative date/time
   def rel_time(dt)
     dt =  Time.now - Time.parse(dt)
     case dt
       when 1..60
-        "#{dt} secs ago"
+        "#{dt.to_i} secs ago"
       when 60..120
         "#{(dt/60).to_i} min ago"
       when 120..3600

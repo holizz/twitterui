@@ -152,7 +152,7 @@ class TwitterUI < Shoes
     # Clickable links.
     text.split.collect do |tok|
       if tok =~ /http:\/\//
-        tok.gsub(/http:\/\/.*/, 'link("\0", :click => "\0",' +
+        tok.gsub(/(.*)(http:\/\/.*)/, '"\1", link("\2", :click => "\2",' +
                                 ':stroke => orange, :fill => "'+bg+'"), " "') + ' '
       else
         "\"#{tok} \""

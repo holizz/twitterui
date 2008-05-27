@@ -71,8 +71,12 @@ class TwitterUI < Shoes
   url '/', :index
   url '/config/(\w+)', :config
 
-  @@twitter = nil
-  @@tweets_flow = nil
+  # Keep the app's context & status under there.
+  @@context = {
+    :twitter     => nil,
+    :tweets_flow => nil,
+    :sleeptime   => 120
+  }
 
   # Config Page
   def config(show_welcome = nil)
@@ -99,7 +103,7 @@ class TwitterUI < Shoes
 
     button "Connect !", :margin_left => 20 do
       if @login.text != "" && @password.text != ""
-        @@twitter.save_config(:user => @login.text, :password => @password.text)
+        @@context[:twitter].save_config(:user => @login.text, :password => @password.text)
         visit('/')
       else
         alert "*cough* I really need those two fields filled please. ^^"
@@ -113,11 +117,12 @@ class TwitterUI < Shoes
 
   # Go Shoes ! \o/
   def index
-    @@twitter = TwitterApp.new if @@twitter.nil?
-    visit('/config/with_welcome') if @@twitter.login.nil?
+    @@context[:twitter] = TwitterApp.new if @@context[:twitter].nil?
+    visit '/config/with_welcome' if @@context[:twitter].login.nil?
     background black
     display_control_box
-    load_tweets('Loading...')
+    load_tweets 'Loading...'
+    wait_for_tweets
   end
 
   # Bye Shoes !
@@ -146,6 +151,7 @@ class TwitterUI < Shoes
 
   # format text and links out of a twitter status message
   def format_text(text, bg)
+    text.gsub!(/\\/, "\\\\\\")
     text.gsub!(/"/, '\"')
     return '"'+text+'"' unless text.include? 'http'
 
@@ -184,9 +190,12 @@ class TwitterUI < Shoes
             @up_stack.show
             @shown = true
           end
-        }, " | ", link('refresh', :size => 8, :stroke => "#bfd34a", :fill => gray(0.1) ) {
+        },
+        " | ",
+        link('refresh', :size => 8, :stroke => "#bfd34a", :fill => gray(0.1) ) {
           load_tweets('Refreshing...')
-        }, :stroke => white, :font => "Verdana", :size => 8
+        },
+        :stroke => white, :font => "Verdana", :size => 8
       end
 
       # Twitter IM bot logo goes here.
@@ -198,11 +207,11 @@ class TwitterUI < Shoes
 
   # Show twitter satuses
   def display_tweets(tweets)
-    @@tweets_flow.clear unless @@tweets_flow.nil?
-    @@tweets_flow = flow :margin => 0, :width => 1.0 do
+    @@context[:tweets_flow].clear unless @@context[:tweets_flow].nil?
+    @@context[:tweets_flow] = flow :margin => 0, :width => 1.0 do
       tweets.each do |status|
         stack :width => -20, :margin => 5 do
-          bg_color = ( status.user.screen_name != @@twitter.login ) ? "#191919" : "#39414A"
+          bg_color = ( status.user.screen_name != @@context[:twitter].login ) ? "#191919" : "#39414A"
           background bg_color, :radius => 10
 
           flow :width => -5 do
@@ -219,24 +228,37 @@ class TwitterUI < Shoes
     end
   end
 
-  # Load twitter's friend timeline and display it
+  # Display a loading message, and reset the loading timer
   def load_tweets(msg = "Refresing...")
     @loading = status_msg(msg)
-    tweets = []
+    @@context[:seconds_to_reload] = 0
+  end
 
+  # Load and displays tweets in their own thread.
+  def wait_for_tweets
+    tweets = nil
+    last_check = nil
     Thread.new do
-      tweets = @@twitter.tweets
-      @loading.replace ""
-      display_tweets(tweets)
+      while true do
+        tweets = @@context[:twitter].tweets
+        @@context[:seconds_to_reload] = @@context[:sleeptime]
+        if last_check.nil? || tweets.first.created_at > last_check.created_at
+          display_tweets(tweets)
+        end
+        last_check = tweets.first
+        @loading.replace ""
+        sleep 1 until 0 >= (@@context[:seconds_to_reload] -= 1)
+        @loading = status_msg('Loading...')
+      end
     end
   end
 
   # Displays a text status para on top of the app
   def status_msg(msg)
-    if @@tweets_flow.nil?
+    if @@context[:tweets_flow].nil?
       @loading = para msg, :stroke => white, :font => "Verdana", :size => 8
     else
-      @@tweets_flow.before do
+      @@context[:tweets_flow].before do
         @loading = para msg, :stroke => white, :font => "Verdana", :size => 8
       end
     end
@@ -248,7 +270,7 @@ class TwitterUI < Shoes
     @sending = status_msg('Sending...')
 
     Thread.new do
-      @@twitter.post @up_text.text
+      @@context[:twitter].post @up_text.text
       @sending.replace ''
     end
     @up_text.text = ''

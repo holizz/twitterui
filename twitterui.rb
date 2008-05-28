@@ -106,7 +106,7 @@ class TwitterUI < Shoes
         @@context[:twitter].save_config(:user => @login.text, :password => @password.text)
         visit('/')
       else
-        alert "*cough* I really need those two fields filled please. ^^"
+        alert "*cough* I really need a login and password please. ^^"
       end
     end
 
@@ -193,7 +193,7 @@ class TwitterUI < Shoes
         },
         " | ",
         link('refresh', :size => 8, :stroke => "#bfd34a", :fill => gray(0.1) ) {
-          load_tweets('Refreshing...')
+          load_tweets 'Refreshing...'
         },
         :stroke => white, :font => "Verdana", :size => 8
       end
@@ -230,7 +230,7 @@ class TwitterUI < Shoes
 
   # Display a loading message, and reset the loading timer
   def load_tweets(msg = "Refresing...")
-    @loading = status_msg(msg)
+    @status_msg = status_msg(msg)
     @@context[:seconds_to_reload] = 0
   end
 
@@ -246,34 +246,38 @@ class TwitterUI < Shoes
           display_tweets(tweets)
         end
         last_check = tweets.first
-        @loading.replace ""
+        @status_msg.replace ""
         sleep 1 until 0 >= (@@context[:seconds_to_reload] -= 1)
-        @loading = status_msg('Loading...')
       end
     end
   end
 
   # Displays a text status para on top of the app
   def status_msg(msg)
+    if @status_msg
+      @status_msg.replace msg
+      return @status_msg
+    end
+
     if @@context[:tweets_flow].nil?
-      @loading = para msg, :stroke => white, :font => "Verdana", :size => 8
+      @status_msg = para msg, :stroke => white, :font => "Verdana", :size => 8
     else
       @@context[:tweets_flow].before do
-        @loading = para msg, :stroke => white, :font => "Verdana", :size => 8
+        @status_msg = para msg, :stroke => white, :font => "Verdana", :size => 8
       end
     end
-    @loading
+    @status_msg
   end
 
   # Update status on Twitter
   def update_status
-    @sending = status_msg('Sending...')
+    @status_msg = status_msg('Sending...')
 
     Thread.new do
       @@context[:twitter].post @up_text.text
-      @sending.replace ''
+      @status_msg.replace ""
     end
-    @up_text.text = ''
+    @up_text.text = ""
   end
 
   # Relative date/time

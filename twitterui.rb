@@ -168,39 +168,49 @@ class TwitterUI < Shoes
 
   # shows update edit-box & refresh links...
   def display_control_box
-    @shown = false   # @up_stack.toggle fails ¬¬
+    @shown = false   # @status_flow.toggle fails ¬¬
+    char_left = 140
+    char_text = "%d character%s left."
+
     flow :width => -20, :margin => 10 do
       background gray(0.1), :radius => 10
 
-      # Status' edit-box
-      @up_stack = stack :width => 1.0, :margin => 8, :hidden => true do
-        @up_text = edit_box "What are you doing?", :width => 1.0, :height => 50
-        para link('post!', :size => 8, :stroke => "#bfd34a", :font => "Verdana", :fill => gray(0.1)) {
-          update_status
-        }, :align => "right"
-      end
-
       # Edit-box toggle & refresh links
-      stack :width => -50 do
-        para link('update your status', :size => 8, :stroke => "#bfd34a", :fill => gray(0.1) ) {
-          if @shown
-            @up_stack.hide
-            @shown = false
-          else
-            @up_stack.show
-            @shown = true
-          end
-        },
-        " | ",
-        link('refresh', :size => 8, :stroke => "#bfd34a", :fill => gray(0.1) ) {
-          load_tweets 'Refreshing...'
-        },
-        :stroke => white, :font => "Verdana", :size => 8
+      image "media/new_post.png", :margin => 2 do
+        if @shown
+          @status_flow.hide
+          @shown = false
+        else
+          @status_flow.show
+          @shown = true
+        end
       end
+      image "media/refresh.png", :margin => 2 do
+        load_tweets 'Refreshing...'
+      end
+      image "media/twitter_logo.png", :left => "83%", :margin => 2
 
-      # Twitter IM bot logo goes here.
-      stack :width => 32, :margin_bottom => 16 do
-        image "twitter.png", :align => "top", :height => 32, :width => 32
+      # Status' edit-box
+      @status_flow = flow :width => 1.0, :margin => 8, :hidden => true do
+
+        # Edit-box input
+        @up_text = edit_box "What are you doing?", :width => 1.0, :height => 50 do
+          char_left = 140 - @up_text.text.size
+          char_left = 0 if char_left < 0
+          text = char_text % [char_left, (char_left > 1) ? 's' : '']
+          @char_count.replace text
+        end
+
+        stack :width => -20 do
+          # Characters left para
+          text = char_text % [char_left, (char_left > 1) ? 's' : '']
+          @char_count = para text, :stroke => white, :font => "Verdana", :size => 8
+        end
+
+        # Save button
+        image "media/save.png", :margin => 2 do
+          update_status
+        end
       end
     end
   end

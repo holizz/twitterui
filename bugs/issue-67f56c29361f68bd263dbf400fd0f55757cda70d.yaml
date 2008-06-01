@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Notifications
+desc: Some people like to get notified of newly received tweets. Sounds ?
+type: :feature
+component: twitterui
+release: "0.2"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-06-01 16:13:17.387684 Z
+references: []
+
+id: 67f56c29361f68bd263dbf400fd0f55757cda70d
+log_events: 
+- - 2008-06-01 16:13:19.014800 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""
+- - 2008-06-01 16:19:13.855468 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - assigned to release 0.2 from unassigned
+  - ""

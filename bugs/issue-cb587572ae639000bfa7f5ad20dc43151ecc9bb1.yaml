@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Configuration...
+desc: Add a decent configuration page to set Twitter poll interval, and later, select a URL-shortener service, notification options, etc.
+type: :feature
+component: twitterui
+release: "0.1"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-06-01 16:10:17.782784 Z
+references: []
+
+id: cb587572ae639000bfa7f5ad20dc43151ecc9bb1
+log_events: 
+- - 2008-06-01 16:10:19.382672 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""

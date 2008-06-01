@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Select update-box text when invoked
+desc: The update box should appear with focus, and remaining text should be selected to ease the editing.
+type: :bugfix
+component: twitterui
+release: "0.1"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-06-01 16:11:55.187326 Z
+references: []
+
+id: 1b0fba301935aaeaf54c2537d962d9010c8486a4
+log_events: 
+- - 2008-06-01 16:11:57.318027 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""

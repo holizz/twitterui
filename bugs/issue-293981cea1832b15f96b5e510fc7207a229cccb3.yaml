@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Friends nicknames links should start a new update msg
+desc: When clicked, a nickname gets you to your friend's twitter home, but it should update the status' edit-box to start a new message to this person.
+type: :bugfix
+component: twitterui
+release: "0.1"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-06-01 16:33:07.390264 Z
+references: []
+
+id: 293981cea1832b15f96b5e510fc7207a229cccb3
+log_events: 
+- - 2008-06-01 16:33:08.686562 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""

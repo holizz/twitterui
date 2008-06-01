@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Key shortcuts
+desc: Some shortcuts to refresh or post update would be nice.
+type: :feature
+component: twitterui
+release: "0.2"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-06-01 16:14:08.582969 Z
+references: []
+
+id: 5249e854e63967d7107f107f78aee9bc8f79dc89
+log_events: 
+- - 2008-06-01 16:14:10.280613 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""
+- - 2008-06-01 16:19:20.376627 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - assigned to release 0.2 from unassigned
+  - ""

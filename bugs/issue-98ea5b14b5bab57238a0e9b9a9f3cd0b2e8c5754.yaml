@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Provide automatic short-links
+desc: Use a short-link service like metamark/tinyurl to shorten URLs in status messagees...
+type: :feature
+component: twitterui
+release: "0.1"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-06-01 16:07:49.110392 Z
+references: []
+
+id: 98ea5b14b5bab57238a0e9b9a9f3cd0b2e8c5754
+log_events: 
+- - 2008-06-01 16:07:51.140558 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""

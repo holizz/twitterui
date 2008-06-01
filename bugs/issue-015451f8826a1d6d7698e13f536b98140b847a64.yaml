@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Turn twitter logo into link
+desc: Twitter logo on main window should be clickable to get one to twitter.com
+type: :feature
+component: twitterui
+release: "0.1"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-06-01 16:34:11.802553 Z
+references: []
+
+id: 015451f8826a1d6d7698e13f536b98140b847a64
+log_events: 
+- - 2008-06-01 16:34:12.464290 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""

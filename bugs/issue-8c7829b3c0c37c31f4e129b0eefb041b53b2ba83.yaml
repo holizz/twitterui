@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Configure colors
+desc: Not everybody like black and grey and green and yellowish colors. :)
+type: :feature
+component: twitterui
+release: "0.2"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-06-01 16:31:16.356073 Z
+references: []
+
+id: 8c7829b3c0c37c31f4e129b0eefb041b53b2ba83
+log_events: 
+- - 2008-06-01 16:31:17.730313 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""

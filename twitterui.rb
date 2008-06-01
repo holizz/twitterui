@@ -188,7 +188,10 @@ class TwitterUI < Shoes
       image "media/refresh.png", :margin => 2 do
         load_tweets 'Refreshing...'
       end
-      image "media/twitter_logo.png", :left => "83%", :margin => 2
+
+      # Twitter logo
+      image "media/twitter_logo.png", :left => "83%", :margin => 2,
+            :click => "http://twitter.com"
 
       # Status' edit-box
       @status_flow = flow :width => 1.0, :margin => 8, :hidden => true do

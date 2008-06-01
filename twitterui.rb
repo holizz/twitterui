@@ -123,6 +123,22 @@ class TwitterUI < Shoes
     display_control_box
     load_tweets 'Loading...'
     wait_for_tweets
+
+    # Keyboard shortcuts.
+    keypress do |key|
+      p key.inspect
+      case key.to_s
+        when "f5"   then load_tweets
+        when "\022" then load_tweets
+        when "\e":
+          @status_flow.hide
+          @shown = false
+        when "\016":
+          @status_flow.show
+          @shown = show
+        when "\021" then quit
+      end
+    end
   end
 
   # Bye Shoes !

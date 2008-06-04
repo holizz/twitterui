@@ -1,0 +1,22 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Don't hang forever when Twitter's not responding
+desc: Network's not always there.
+type: :bugfix
+component: twitterui
+release: "0.1"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :closed
+disposition: :fixed
+creation_time: 2008-06-04 19:45:05.279895 Z
+references: []
+
+id: 68ec7b7d514bb7877bae8563f63bedd4bb57641f
+log_events: 
+- - 2008-06-04 19:45:06.546333 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""
+- - 2008-06-04 20:48:00.722255 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - closed issue with disposition fixed
+  - Probably clumsy, but oh well... it works, does it ? :p

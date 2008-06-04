@@ -75,7 +75,8 @@ class TwitterUI < Shoes
   @@context = {
     :twitter     => nil,
     :tweets_flow => nil,
-    :sleeptime   => 120
+    :sleeptime   => 120,      # Check timeline every 2 minutes
+    :timeout     => 30        # Don't wait for Twitter more than 30 seconds
   }
 
   # Config Page
@@ -124,9 +125,22 @@ class TwitterUI < Shoes
     load_tweets 'Loading...'
     wait_for_tweets
 
+    # Check (in a rather clumsy way) that we're not waiting
+    # Twitter too long.
+    Thread.new do
+      while true do
+        if @@context[:twitter_check] != nil && (Time.now - @@context[:twitter_check]) > @@context[:timeout]
+          @@context[:twitter_thread].terminate
+          @@context[:twitter_thread] = nil
+          load_tweets 'Loading...'
+          wait_for_tweets
+        end
+        sleep 5
+      end
+    end
+
     # Keyboard shortcuts.
     keypress do |key|
-      p key.inspect
       case key.to_s
         when "f5"   then load_tweets
         when "\022" then load_tweets
@@ -267,9 +281,18 @@ class TwitterUI < Shoes
   def wait_for_tweets
     tweets = nil
     last_check = nil
+
     Thread.new do
+      @@context[:twitter_thread] = Thread.current
       while true do
+
+        # Ask Twitter.
+        @@context[:twitter_check] = Time.now
         tweets = @@context[:twitter].tweets
+        @@context[:twitter_check] = nil
+
+        # Display timeline if needed, then wait until it's time to reload
+        # again...
         @@context[:seconds_to_reload] = @@context[:sleeptime]
         if last_check.nil? || tweets.first.created_at > last_check.created_at
           display_tweets(tweets)

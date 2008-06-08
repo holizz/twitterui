@@ -203,7 +203,7 @@ class TwitterUI < Shoes
     char_text = "%d character%s left."
 
     flow :width => -20, :margin => 10 do
-      background gray(0.1), :radius => 10
+      background gray(0.1), :curve => 10
 
       # Edit-box toggle & refresh links
       image "media/new_post.png", :margin => 2 do
@@ -255,7 +255,7 @@ class TwitterUI < Shoes
       tweets.each do |status|
         stack :width => -20, :margin => 5 do
           bg_color = ( status.user.screen_name != @@context[:twitter].login ) ? "#191919" : "#39414A"
-          background bg_color, :radius => 10
+          background bg_color, :curve => 10
 
           flow :width => -5 do
             stack :width => 48, :margin => 5 do

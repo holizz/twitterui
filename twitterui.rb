@@ -328,6 +328,8 @@ class TwitterUI < Shoes
     Thread.new do
       @@context[:twitter].post @up_text.text
       @status_msg.replace ""
+      load_tweets
+      wait_for_tweets
     end
     @up_text.text = ""
   end

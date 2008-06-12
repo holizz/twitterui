@@ -282,7 +282,7 @@ class TwitterUI < Shoes
   # Load and displays tweets in their own thread.
   def wait_for_tweets
     tweets = nil
-    last_check = nil
+    last_tweets = nil
 
     Thread.new do
       @@context[:twitter_thread] = Thread.current
@@ -296,10 +296,10 @@ class TwitterUI < Shoes
         # Display timeline if needed, then wait until it's time to reload
         # again...
         @@context[:seconds_to_reload] = @@context[:sleeptime]
-        if last_check.nil? || tweets.first.created_at > last_check.created_at
+        if last_tweets.nil? || tweets.zip(last_tweets).any? {|t,l|t.created_at!=l.created_at}
           display_tweets(tweets)
         end
-        last_check = tweets.first
+        last_tweets = tweets
         @status_msg.replace ""
         sleep 1 until 0 >= (@@context[:seconds_to_reload] -= 1)
       end

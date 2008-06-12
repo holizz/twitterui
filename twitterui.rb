@@ -183,6 +183,8 @@ class TwitterUI < Shoes
   def format_text(text, bg)
     text.gsub!(/\\/, "\\\\\\")
     text.gsub!(/"/, '\"')
+    text.gsub!(/&lt;/, '<')
+    text.gsub!(/&gt;/, '>')
     return '"'+text+'"' unless text.include? 'http'
 
     # Clickable links.

@@ -231,14 +231,13 @@ class TwitterUI < Shoes
         # Edit-box input
         @up_text = edit_box "What are you doing?", :width => 1.0, :height => 50 do
           char_left = 140 - @up_text.text.size
-          char_left = 0 if char_left < 0
-          text = char_text % [char_left, (char_left > 1) ? 's' : '']
+          text = char_text % [char_left, (char_left != 1) ? 's' : '']
           @char_count.replace text
         end
 
         stack :width => -20 do
           # Characters left para
-          text = char_text % [char_left, (char_left > 1) ? 's' : '']
+          text = char_text % [char_left, (char_left != 1) ? 's' : '']
           @char_count = para text, :stroke => white, :font => "Verdana", :size => 8
         end
 

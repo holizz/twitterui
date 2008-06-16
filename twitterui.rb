@@ -80,10 +80,11 @@ class TwitterUI < Shoes
   }
 
   # Config Page
-  def config(show_welcome = nil)
+  def config(show_welcome = 0)
     background gray(0.1)
- 
-    if show_welcome
+    login  = @@context[:twitter].login ? @@context[:twitter].login : 'username?'
+
+    if show_welcome == 1
       stack :width => 1.0 do
         banner "Welcome...\n", :stroke => "#bfd34a", :size => 14
         para "to this tiny Shoes app!\n\n",
@@ -95,31 +96,32 @@ class TwitterUI < Shoes
  
     stack :margin_top => 5 do
       para "Login: \n", :font => "Verdana", :size => 8, :stroke => white, :margin_left => 20
-      @login = edit_line :margin_left => 20
+      @login = edit_line login, :margin_left => 20, :width => '200px'
     end
     stack :margin_top => 5 do
       para "Password: \n", :font => "Verdana", :size => 8, :stroke => white, :margin_left => 20
-      @password = edit_line :margin_left => 20, :secret => true
+      @password = edit_line '', :margin_left => 20, :secret => true, :width => '200px'
     end
 
-    button "Connect !", :margin_left => 20 do
+
+    button "No, thanks.", :margin_left => 5 do
+      quit if 1 == show_welcome
+      visit('/')
+    end
+    button "Ok, connect !", :margin_left => 20 do
       if @login.text != "" && @password.text != ""
         @@context[:twitter].save_config(:user => @login.text, :password => @password.text)
         visit('/')
-      else
+      elsif 1 == show_welcome
         alert "*cough* I really need a login and password please. ^^"
       end
-    end
-
-    button "No, thanks.", :margin_left => 5 do
-      quit
     end
   end
 
   # Go Shoes ! \o/
   def index
     @@context[:twitter] = TwitterApp.new if @@context[:twitter].nil?
-    visit '/config/with_welcome' if @@context[:twitter].login.nil?
+    visit '/config/1' if @@context[:twitter].login.nil?
     background black
     display_control_box
     load_tweets 'Loading...'
@@ -158,7 +160,8 @@ class TwitterUI < Shoes
   # Bye Shoes !
   def quit
     current = Thread.current
-    Thread.list.each { |t| t.join unless t == current }
+    main    = Thread.main
+    Thread.list.each { |t| t.kill unless t == current || t == main }
     exit
   end
 
@@ -217,6 +220,9 @@ class TwitterUI < Shoes
       end
       image "media/refresh.png", :margin => 2 do
         load_tweets 'Refreshing...'
+      end
+      image "media/config.png", :margin => 2 do
+        visit '/config/0'
       end
 
       # Twitter logo

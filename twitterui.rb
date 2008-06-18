@@ -76,7 +76,7 @@ class TwitterUI < Shoes
   @@context = {
     :twitter     => nil,
     :tweets_flow => nil,
-    :sleeptime   => 120,      # Check timeline every 2 minutes
+    :sleeptime   => 20,      # Check timeline every 2 minutes
     :timeout     => 30        # Don't wait for Twitter more than 30 seconds
   }
 
@@ -148,6 +148,7 @@ class TwitterUI < Shoes
     background black
     display_control_box
     @@context[:busy] = nil
+    @@context[:tweets_flow] = nil
 
     if @@context[:twitter].nil?
       @@context[:twitter] = TwitterApp.new 
@@ -169,7 +170,8 @@ class TwitterUI < Shoes
           sleep 5
         end
       end
-
+    else
+      load_tweets 'Loading...'
     end
 
     # Keyboard shortcuts.
@@ -179,10 +181,8 @@ class TwitterUI < Shoes
         when "\022" then load_tweets
         when "\e":
           @status_flow.hide
-          @shown = false
         when "\016":
           @status_flow.show
-          @shown = show
         when "\021" then quit
       end
     end
@@ -234,7 +234,6 @@ class TwitterUI < Shoes
 
   # shows update edit-box & refresh links...
   def display_control_box
-    @shown = false   # @status_flow.toggle fails ¬¬
     char_left = 140
     char_text = "%d character%s left."
 
@@ -243,13 +242,7 @@ class TwitterUI < Shoes
 
       # Edit-box toggle & refresh links
       image "media/new_post.png", :margin => 2 do
-        if @shown
-          @status_flow.hide
-          @shown = false
-        else
-          @status_flow.show
-          @shown = true
-        end
+        @status_flow.toggle
       end
       image "media/refresh.png", :margin => 2 do
         load_tweets 'Refreshing...'

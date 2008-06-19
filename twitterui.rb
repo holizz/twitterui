@@ -329,7 +329,9 @@ class TwitterUI < Shoes
         # Display timeline if needed, then wait until it's time to reload
         # again...
         @@context[:seconds_to_reload] = @@context[:sleeptime]
-        if last_tweets.nil? || tweets.zip(last_tweets).any? {|t,l|t.created_at!=l.created_at}
+        if last_tweets.nil? || 
+           tweets.zip(last_tweets).any? {|t,l|t.created_at!=l.created_at} ||
+           @@context[:tweets_flow] == nil
           display_tweets(tweets)
         end
         last_tweets = tweets
@@ -388,7 +390,6 @@ class TwitterUI < Shoes
         "#{(dt/60/60/60).to_i} days ago"
     end
   end
-
 end
 
 Shoes.app :title => 'Twitter UI', :width => 300, :height => 350

@@ -5,8 +5,8 @@ type: :feature
 component: twitterui
 release: "0.1"
 reporter: Arnaud Berthomier <oz@cyprio.net>
-status: :unstarted
-disposition: 
+status: :closed
+disposition: :fixed
 creation_time: 2008-06-01 16:10:17.782784 Z
 references: []
 
@@ -16,3 +16,7 @@ log_events:
   - Arnaud Berthomier <oz@cyprio.net>
   - created
   - ""
+- - 2008-06-19 07:32:43.379596 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - closed issue with disposition fixed
+  - Tiny config. page ok.

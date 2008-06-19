@@ -76,7 +76,7 @@ class TwitterUI < Shoes
   @@context = {
     :twitter     => nil,
     :tweets_flow => nil,
-    :sleeptime   => 20,      # Check timeline every 2 minutes
+    :sleeptime   => 120,      # Check timeline every 2 minutes
     :timeout     => 30        # Don't wait for Twitter more than 30 seconds
   }
 

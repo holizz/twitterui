@@ -219,6 +219,7 @@ class TwitterUI < Shoes
     text.gsub!(/"/, '\"')
     text.gsub!(/&lt;/, '<')
     text.gsub!(/&gt;/, '>')
+    text.gsub!(/#/, "\\#")
     return '"'+text+'"' unless text.include? 'http'
 
     # Clickable links.

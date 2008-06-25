@@ -304,7 +304,7 @@ class TwitterUI < Shoes
   end
 
   # Display a loading message, and reset the loading timer
-  def load_tweets(msg = "Refresing...")
+  def load_tweets(msg = "Refreshing...")
     @status_msg = status_msg(msg)
     @@context[:seconds_to_reload] = 0
   end

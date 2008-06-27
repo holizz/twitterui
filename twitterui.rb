@@ -69,7 +69,8 @@ end
 
 class TwitterUI < Shoes
   url '/', :index
-  url '/config/(\w+)', :config
+  url '/config', :config
+  url '/first_config', :first_config
 
   # Keep the app's context & status under there.
   @@context = {
@@ -79,64 +80,98 @@ class TwitterUI < Shoes
     :timeout     => 30        # Don't wait for Twitter more than 30 seconds
   }
 
-  # Config Page
-  def config(show_welcome = nil)
+  # First time config page: ask for login & password
+  def first_config
     background gray(0.1)
- 
-    if show_welcome
-      stack :width => 1.0 do
-        banner "Welcome...\n", :stroke => "#bfd34a", :size => 14
-        para "to this tiny Shoes app!\n\n",
-            "It seems you've never launched me, so we need to know each other better",
-            " so I can get you to twitter.",
-            :font => "Verdana", :size => 8, :stroke => white
-      end
+    stack :width => 1.0 do
+      banner "Welcome...\n", :stroke => "#bfd34a", :size => 14
+      para "to this tiny Shoes app!\n\n",
+          "It seems you've never launched me, so we need to know each other better",
+          " so I can get you to twitter.",
+          :font => "Verdana", :size => 8, :stroke => white
     end
  
     stack :margin_top => 5 do
       para "Login: \n", :font => "Verdana", :size => 8, :stroke => white, :margin_left => 20
-      @login = edit_line :margin_left => 20
+      @login = edit_line :margin_left => 20, :width => '200px'
     end
     stack :margin_top => 5 do
       para "Password: \n", :font => "Verdana", :size => 8, :stroke => white, :margin_left => 20
-      @password = edit_line :margin_left => 20, :secret => true
-    end
-
-    button "Connect !", :margin_left => 20 do
-      if @login.text != "" && @password.text != ""
-        @@context[:twitter].save_config(:user => @login.text, :password => @password.text)
-        visit('/')
-      else
-        alert "*cough* I really need a login and password please. ^^"
-      end
+      @password = edit_line :margin_left => 20, :secret => true, :width => '200px'
     end
 
     button "No, thanks.", :margin_left => 5 do
       quit
     end
+    button "Ok, connect !", :margin_left => 20 do
+      if @login.text != "" && @password.text != ""
+        @@context[:twitter].save_config(:user => @login.text, :password => @password.text)
+        visit('/')
+      elsif 1 == show_welcome
+        alert "*cough* I really need a login and password please. ^^"
+      end
+    end
+  end
+
+  # "Main" config page.
+  def config
+    @@context[:busy] = true
+    background gray(0.1)
+    login = @@context[:twitter].login ? @@context[:twitter].login : 'username?'
+    stack :width => 1.0 do
+      banner "Configure...\n", :stroke => "#bfd34a", :size => 14
+      para "Configure TwitterUI: you can only change your twitter credentials, for now.", 
+          :font => "Verdana", :size => 8, :stroke => white
+    end
+    stack :margin_bottom => 15 do
+      para "Login:", :font => "Verdana", :size => 8, :stroke => white, :margin_left => 20
+      @login = edit_line login, :margin_left => 20, :width => '200px'
+    end
+    stack :margin_bottom => 25 do
+      para "Password:", :font => "Verdana", :size => 8, :stroke => white, :margin_left => 20
+      @password = edit_line '', :margin_left => 20, :secret => true, :width => '200px'
+    end
+
+    button "Cancel", :margin_left => 5 do
+      visit('/')
+    end
+    button "Save", :margin_left => 20 do
+      if @login.text != "" && @password.text != ""
+        @@context[:twitter].save_config(:user => @login.text, :password => @password.text)
+        visit('/')
+      end
+    end
   end
 
   # Go Shoes ! \o/
   def index
-    @@context[:twitter] = TwitterApp.new if @@context[:twitter].nil?
-    visit '/config/with_welcome' if @@context[:twitter].login.nil?
     background black
     display_control_box
-    load_tweets 'Loading...'
-    wait_for_tweets
+    @@context[:busy] = nil
+    @@context[:tweets_flow] = nil
 
-    # Check (in a rather clumsy way) that we're not waiting
-    # Twitter too long.
-    Thread.new do
-      while true do
-        if @@context[:twitter_check] != nil && (Time.now - @@context[:twitter_check]) > @@context[:timeout]
-          @@context[:twitter_thread].terminate
-          @@context[:twitter_thread] = nil
-          load_tweets 'Loading...'
-          wait_for_tweets
+    if @@context[:twitter].nil?
+      @@context[:twitter] = TwitterApp.new 
+      visit '/first_config' if @@context[:twitter].login.nil?
+      load_tweets 'Loading...'
+      wait_for_tweets
+
+      # Check (in a rather clumsy way) that we're not waiting
+      # Twitter too long.
+      Thread.new do
+        while true do
+          timeouted = (Time.now - @@context[:twitter_check]) > @@context[:timeout]
+          if @@context[:twitter_check] != nil && timeouted && !@@context[:busy]
+            @@context[:twitter_thread].terminate
+            @@context[:twitter_thread] = nil
+            load_tweets 'Loading...'
+            wait_for_tweets
+          end
+          sleep 5
         end
-        sleep 5
       end
+    else
+      load_tweets 'Loading...'
     end
 
     # Keyboard shortcuts.
@@ -146,10 +181,8 @@ class TwitterUI < Shoes
         when "\022" then load_tweets
         when "\e":
           @status_flow.hide
-          @shown = false
         when "\016":
           @status_flow.show
-          @shown = show
         when "\021" then quit
       end
     end
@@ -158,7 +191,8 @@ class TwitterUI < Shoes
   # Bye Shoes !
   def quit
     current = Thread.current
-    Thread.list.each { |t| t.join unless t == current }
+    main    = Thread.main
+    Thread.list.each { |t| t.kill unless t == current || t == main }
     exit
   end
 
@@ -185,6 +219,10 @@ class TwitterUI < Shoes
     text.gsub!(/"/, '\"')
     text.gsub!(/&lt;/, '<')
     text.gsub!(/&gt;/, '>')
+<<<<<<< HEAD:twitterui.rb
+=======
+    text.gsub!(/#/, "\\#")
+>>>>>>> 57482a95cb5369fc6ae7251a6a2b0ba307920ae4:twitterui.rb
     return '"'+text+'"' unless text.include? 'http'
 
     # Clickable links.
@@ -200,7 +238,6 @@ class TwitterUI < Shoes
 
   # shows update edit-box & refresh links...
   def display_control_box
-    @shown = false   # @status_flow.toggle fails ¬¬
     char_left = 140
     char_text = "%d character%s left."
 
@@ -209,16 +246,13 @@ class TwitterUI < Shoes
 
       # Edit-box toggle & refresh links
       image "media/new_post.png", :margin => 2 do
-        if @shown
-          @status_flow.hide
-          @shown = false
-        else
-          @status_flow.show
-          @shown = true
-        end
+        @status_flow.toggle
       end
       image "media/refresh.png", :margin => 2 do
         load_tweets 'Refreshing...'
+      end
+      image "media/config.png", :margin => 2 do
+        visit '/config'
       end
 
       # Twitter logo
@@ -273,7 +307,7 @@ class TwitterUI < Shoes
   end
 
   # Display a loading message, and reset the loading timer
-  def load_tweets(msg = "Refresing...")
+  def load_tweets(msg = "Refreshing...")
     @status_msg = status_msg(msg)
     @@context[:seconds_to_reload] = 0
   end
@@ -287,15 +321,21 @@ class TwitterUI < Shoes
       @@context[:twitter_thread] = Thread.current
       while true do
 
-        # Ask Twitter.
-        @@context[:twitter_check] = Time.now
-        tweets = @@context[:twitter].tweets
-        @@context[:twitter_check] = nil
+        # Don't load anything if the app is busy in config mode or whatever.
+        # (I wish shoes supported multiple windows ^^;)
+        unless @@context[:busy]
+          # Ask Twitter.
+          @@context[:twitter_check] = Time.now
+          tweets = @@context[:twitter].tweets
+          @@context[:twitter_check] = nil
+        end
 
         # Display timeline if needed, then wait until it's time to reload
         # again...
         @@context[:seconds_to_reload] = @@context[:sleeptime]
-        if last_tweets.nil? || tweets.zip(last_tweets).any? {|t,l|t.created_at!=l.created_at}
+        if last_tweets.nil? || 
+           tweets.zip(last_tweets).any? {|t,l|t.created_at!=l.created_at} ||
+           @@context[:tweets_flow] == nil
           display_tweets(tweets)
         end
         last_tweets = tweets
@@ -354,7 +394,6 @@ class TwitterUI < Shoes
         "#{(dt/60/60/60).to_i} days ago"
     end
   end
-
 end
 
 Shoes.app :title => 'Twitter UI', :width => 300, :height => 350

@@ -1,0 +1,18 @@
+--- !ditz.rubyforge.org,2008-03-06/issue 
+title: Config page to index does not allow redrawing by lingering threads
+desc: Threads created when in the index action don't seem to be able to draw when we load the config action, and get back again to the index (?). Maybe I should kill them when I load anything else that's not index (?)...
+type: :bugfix
+component: twitterui
+release: "0.1"
+reporter: Arnaud Berthomier <oz@cyprio.net>
+status: :unstarted
+disposition: 
+creation_time: 2008-06-19 07:34:43.691530 Z
+references: []
+
+id: e64196d9eaf40611e4b1059980e1f8cba7af50ba
+log_events: 
+- - 2008-06-19 07:34:46.434650 Z
+  - Arnaud Berthomier <oz@cyprio.net>
+  - created
+  - ""
